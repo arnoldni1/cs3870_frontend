@@ -6,15 +6,9 @@ import DeleteContact from "./DeleteContact.jsx";
 import UpdateContact from "./UpdateContact.jsx";
 import ViewContact from "./ViewContact.jsx";
 
-
-// Temporary placeholders for routes you’ll implement later
 const Home = () => <p>Welcome.</p>;
-//const AddContact = () => <p>(POST) Add contact screen (coming soon)</p>;
-//const DeleteContact = () => <p>(DELETE) Delete contact screen (coming soon)</p>;
-//const UpdateContact = () => <p>(PUT) Update contact screen (coming soon)</p>;
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>
@@ -42,8 +36,6 @@ function App() {
           path="/view"
           element={<Layout title="View Contact"><ViewContact /></Layout>}
         />
-
-        {/* default */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
