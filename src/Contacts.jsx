@@ -1,40 +1,54 @@
 import { useState, useEffect } from 'react';
 
-
 const Contacts = () => {
     const [contacts, setContacts] = useState([]);
 
     useEffect(() => {
         const fetchContacts = async () => {
             try {
-                const response = await fetch("https://cs3870-backend-1.onrender.com/contacts");
+                const response = await fetch(
+                    "https://cs3870-backend-0wyn.onrender.com/contacts",
+                    {
+                        method: "GET",
+                        mode: "cors"
+                    }
+                );
 
                 if (!response.ok) {
-                    throw new Error("Failed to fetch contacts");
+                    throw new Error(`HTTP error: ${response.status}`);
                 }
+
                 const data = await response.json();
                 setContacts(data);
             } catch (error) {
-                alert("There was an Error loading contacts " + error.message);
+                console.error("Error fetching contacts:", error);
+                alert("There was an error loading contacts: " + error.message);
             }
         };
+
         fetchContacts();
     }, []);
-
 
     return (
         <div className="container">
             <h2 className="text-center mt-4">Contacts List</h2>
+
             <ul className="list-group">
-                {contacts.map((contact) => (
-                    <li key={contact.id} className="list-group-item d-flex align-items-center">
+                {contacts.map(contact => (
+                    <li key={contact._id} className="list-group-item d-flex align-items-center">
                         {contact.image_url && (
                             <img
                                 src={contact.image_url}
                                 alt={contact.contact_name}
-                                style={{ width: '50px', height: '50px', marginRight: '15px', objectFit: 'cover' }}
+                                style={{
+                                    width: '50px',
+                                    height: '50px',
+                                    marginRight: '15px',
+                                    objectFit: 'cover'
+                                }}
                             />
                         )}
+
                         <div>
                             <strong>{contact.contact_name}</strong> - {contact.phone_number}
                             <p>{contact.message}</p>
@@ -43,7 +57,6 @@ const Contacts = () => {
                 ))}
             </ul>
         </div>
-
     );
 };
 
