@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { BASE_URL } from './api.js';
 
 const Contacts = () => {
     const [contacts, setContacts] = useState([]);
@@ -6,18 +7,8 @@ const Contacts = () => {
     useEffect(() => {
         const fetchContacts = async () => {
             try {
-                const response = await fetch(
-                    "https://cs3870-backend-0wyn.onrender.com/contacts",
-                    {
-                        method: "GET",
-                        mode: "cors"
-                    }
-                );
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`);
-                }
-
+                const response = await fetch(`${BASE_URL}/contacts`, { method: "GET", mode: "cors" });
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
                 const data = await response.json();
                 setContacts(data);
             } catch (error) {
@@ -32,7 +23,6 @@ const Contacts = () => {
     return (
         <div className="container">
             <h2 className="text-center mt-4">Contacts List</h2>
-
             <ul className="list-group">
                 {contacts.map(contact => (
                     <li key={contact._id} className="list-group-item d-flex align-items-center">
@@ -40,15 +30,9 @@ const Contacts = () => {
                             <img
                                 src={contact.image_url}
                                 alt={contact.contact_name}
-                                style={{
-                                    width: '50px',
-                                    height: '50px',
-                                    marginRight: '15px',
-                                    objectFit: 'cover'
-                                }}
+                                style={{ width: '50px', height: '50px', marginRight: '15px', objectFit: 'cover' }}
                             />
                         )}
-
                         <div>
                             <strong>{contact.contact_name}</strong> - {contact.phone_number}
                             <p>{contact.message}</p>
@@ -61,4 +45,3 @@ const Contacts = () => {
 };
 
 export default Contacts;
-
