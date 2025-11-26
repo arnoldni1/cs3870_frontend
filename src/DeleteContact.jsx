@@ -1,49 +1,39 @@
-// DeleteContact.jsx
 import React, { useState } from "react";
+import { BASE_URL } from './api.js';
+
 function DeleteContact() {
     const [name, setName] = useState("");
     const [message, setMessage] = useState("");
+
     const handleDelete = async (e) => {
         e.preventDefault();
         setMessage("");
         const trimmedName = name.trim();
-        if (!trimmedName) {
-            setMessage("Please enter a contact name.");
-            return;
-        }
+        if (!trimmedName) { setMessage("Please enter a contact name."); return; }
+
         try {
             const encodedName = encodeURIComponent(trimmedName);
-            console.log("EncodeURIComponent :", encodedName);
-            const res = await fetch(`http://localhost:8081/contacts/${encodedName}`, {
-                method: "DELETE",
-            });
+            const res = await fetch(`${BASE_URL}/contacts/${encodedName}`, { method: "DELETE" });
             const data = await res.json().catch(() => null);
+
             if (!res.ok) {
-                const errorMsg = data?.message || `Error: HTTP ${res.status}`;
-                setMessage(errorMsg);
+                setMessage(data?.message || `Error: HTTP ${res.status}`);
             } else {
-                const successMsg =
-                    data?.message || `Contact '${trimmedName}' was deleted successfully.`;
-                setMessage(successMsg);
-                setName(""); // clear input
+                setMessage(data?.message || `Contact '${trimmedName}' was deleted successfully.`);
+                setName("");
             }
         } catch (error) {
             console.error("Error deleting contact:", error);
             setMessage("Network error while deleting contact.");
         }
     };
+
     return (
         <div>
             <h2>Delete Contact</h2>
             <form onSubmit={handleDelete}>
-                <label>
-                    Contact Name:
-                    <input
-                        type="text"
-                        value={name}
-                        placeholder="e.g. Abraham Aldaco"
-                        onChange={(e) => setName(e.target.value)}
-                    />
+                <label>Contact Name:
+                    <input type="text" value={name} placeholder="e.g. Abraham Aldaco" onChange={(e) => setName(e.target.value)} />
                 </label>
                 <button type="submit">Delete</button>
             </form>
