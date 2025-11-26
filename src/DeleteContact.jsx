@@ -9,17 +9,27 @@ function DeleteContact() {
         e.preventDefault();
         setMessage("");
         const trimmedName = name.trim();
-        if (!trimmedName) { setMessage("Please enter a contact name."); return; }
+        if (!trimmedName) {
+            setMessage("Please enter a contact name.");
+            return;
+        }
 
         try {
             const encodedName = encodeURIComponent(trimmedName);
-            const res = await fetch(`${BASE_URL}/contacts/${encodedName}`, { method: "DELETE" });
+            console.log("EncodeURIComponent :", encodedName);
+            const res = await fetch(`${BASE_URL}/contacts/${encodedName}`, {
+                method: "DELETE",
+            });
+
             const data = await res.json().catch(() => null);
 
             if (!res.ok) {
-                setMessage(data?.message || `Error: HTTP ${res.status}`);
+                const errorMsg = data?.message || `Error: HTTP ${res.status}`;
+                setMessage(errorMsg);
             } else {
-                setMessage(data?.message || `Contact '${trimmedName}' was deleted successfully.`);
+                const successMsg =
+                    data?.message || `Contact '${trimmedName}' was deleted successfully.`;
+                setMessage(successMsg);
                 setName("");
             }
         } catch (error) {
@@ -32,8 +42,14 @@ function DeleteContact() {
         <div>
             <h2>Delete Contact</h2>
             <form onSubmit={handleDelete}>
-                <label>Contact Name:
-                    <input type="text" value={name} placeholder="e.g. Abraham Aldaco" onChange={(e) => setName(e.target.value)} />
+                <label>
+                    Contact Name:
+                    <input
+                        type="text"
+                        value={name}
+                        placeholder="e.g. Abraham Aldaco"
+                        onChange={(e) => setName(e.target.value)}
+                    />
                 </label>
                 <button type="submit">Delete</button>
             </form>
@@ -41,4 +57,6 @@ function DeleteContact() {
         </div>
     );
 }
+
 export default DeleteContact;
+
